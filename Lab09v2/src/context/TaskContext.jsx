@@ -1,6 +1,8 @@
-export const Context = createContext();
+import { createContext, useState } from "react";
 
-export default function TaskContext({ children }) {
+export const TaskContext = createContext();
+
+export default function TaskProvider({ children }) {
     const [tasks, setTasks] = useState([]);
 
     function addTask(task) {
@@ -9,18 +11,27 @@ export default function TaskContext({ children }) {
             text: task,
             completed: false
         };
-        setTasks([...tasks, newTask]);
+
+        setTasks(prev => [...prev, newTask]);
     }
 
     function markedCompleted(id) {
-        setTasks(prev => prev.map(task => task.id === id ?
-            { ...task, completed: !task.completed } : task));
+        setTasks(prev =>
+            prev.map(task =>
+                task.id === id
+                    ? { ...task, completed: !task.completed }
+                    : task
+            )
+        );
+    }
+
+     function removeTask(id) {
+        setTasks(prev => prev.filter(task => task.id !== id));
     }
 
     return (
-        <Context.Provider value={{ tasks, addTask, markedCompleted }}>
+        <TaskContext.Provider value={{ tasks, addTask, markedCompleted, removeTask }}>
             {children}
-        </Context.Provider>
-    )
-
+        </TaskContext.Provider>
+    );
 }

@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { Context } from "../context/TaskContext";
+import { TaskContext } from "../../context/TaskContext";
 
 export default function TaskItem({ task }) {
-  const { markedCompleted } = useContext(Context);
+  const { markedCompleted, removeTask } = useContext(TaskContext);
 
   return (
     <li>
@@ -12,6 +12,9 @@ export default function TaskItem({ task }) {
         onChange={() => markedCompleted(task.id)}
       />
       {task.text}
+      <button onClick={() => removeTask(task.id)}>
+              Delete
+            </button>
     </li>
   );
 }
